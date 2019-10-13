@@ -1,4 +1,6 @@
+<!-- Load static directory containing custom css file -->
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +12,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
+
     {% if title %}
         <title>Django Blog - {{ title }}</title>
     {% else %}

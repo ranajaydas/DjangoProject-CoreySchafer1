@@ -10,8 +10,9 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    def save(self):
-        super().save()
+    def save(self, *args, **kwargs):
+        """Changes existing save function to resize image before saving."""
+        super(Profile, self).save(*args, **kwargs)  # Runs the save method of parent class
 
         img = Image.open(self.image.path)
 

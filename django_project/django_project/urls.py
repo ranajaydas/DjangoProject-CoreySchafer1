@@ -30,5 +30,6 @@ urlpatterns = [
     path('', include('blog.urls')),
 ]
 
+# modified from https://docs.djangoproject.com/en/2.2/howto/static-files/#serving-static-files-during-development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
