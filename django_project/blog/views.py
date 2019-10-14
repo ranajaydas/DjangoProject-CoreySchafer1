@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
@@ -56,20 +57,32 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
         return super().form_valid(form)
 
     def test_func(self):
-        """To ensure that only the author can change their own post."""
+        """The test that must be passed for UserPassesTestMixin
+
+        In this case, the post author must  be one updating the post.
+        """
         post = self.get_object()
         return self.request.user == post.author
 
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     """Class based view for users to delete their posts."""
     model = Post
     success_url = '/'
+    success_message = "Post deleted."
 
     def test_func(self):
-        """To ensure that only the author can change their own post."""
+        """The test that must be passed for UserPassesTestMixin
+
+        In this case, the post author must  be one deleting the post.
+        """
         post = self.get_object()
         return self.request.user == post.author
+
+    def delete(self, request, *args, **kwargs):
+        """Shows success_message upon post deletion."""
+        messages.warning(self.request, self.success_message)
+        return super(PostDeleteView, self).delete(request, *args, **kwargs)
 
 
 def about(request):
