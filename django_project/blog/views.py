@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import (ListView, DetailView, CreateView,
                                   UpdateView, DeleteView)
@@ -10,8 +11,21 @@ class PostListView(ListView):
     """Class based view for Home page."""
     model = Post
     template_name = 'blog/home.html'        # Default = <app>/<model>_<viewtype>.html
-    context_object_name = 'posts'           # Variable inside blog/home.html (default = object_list)
+    context_object_name = 'posts'           # Variable inside the html (default = object_list)
     ordering = ['-date_posted']             # Orders the posts by newest to oldest
+    paginate_by = 5                         # Number of posts per page
+
+
+class UserPostListView(ListView):
+    """Class based view for user post list."""
+    model = Post
+    template_name = 'blog/user_posts.html'  # Default = <app>/<model>_<viewtype>.html
+    context_object_name = 'posts'           # Variable inside the html (default = object_list)
+    paginate_by = 5                         # Number of posts per page
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return Post.objects.filter(author=user).order_by('-date_posted')
 
 
 class PostDetailView(DetailView):
