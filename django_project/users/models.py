@@ -10,13 +10,14 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    def save(self, *args, **kwargs):
-        """Changes existing save function to resize image before saving."""
-        super(Profile, self).save(*args, **kwargs)  # Runs the save method of parent class
-
-        img = Image.open(self.image.path)
-
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+    # Commented out below because using Amazon S3 for storage
+    # def save(self, *args, **kwargs):
+    #     """Changes existing save function to resize image before saving."""
+    #     super(Profile, self).save(*args, **kwargs)  # Runs the save method of parent class
+    #
+    #     img = Image.open(self.image.path)
+    #
+    #     if img.height > 300 or img.width > 300:
+    #         output_size = (300, 300)
+    #         img.thumbnail(output_size)
+    #         img.save(self.image.path)
